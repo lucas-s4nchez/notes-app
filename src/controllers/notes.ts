@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Note from "../models/Note";
+import Note, { INote } from "../models/Note";
 import User from "../models/User";
 
 export const addNewNote = async (req: Request, res: Response) => {
@@ -56,7 +56,7 @@ export const updateNote = async (req: Request, res: Response) => {
     const newNote = {
       ...req.body,
       user: uid,
-    };
+    } as INote;
     const updatedNote = await Note.findByIdAndUpdate(noteId, newNote, {
       new: true,
     });

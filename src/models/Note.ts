@@ -4,6 +4,7 @@ import { IUser } from "./User";
 export interface INote extends Document {
   title: string;
   content: string;
+  date: Date;
   user: IUser["_id"];
 }
 
@@ -14,6 +15,10 @@ const NoteSchema = new Schema({
   },
   content: {
     type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
     required: true,
   },
   user: {

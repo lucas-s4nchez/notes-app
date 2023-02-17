@@ -14,6 +14,7 @@ export const notesValidator = [
     .withMessage("La descripción es obligatoria")
     .isLength({ min: 5 })
     .withMessage("La descripción debe tener al menos 5 caracteres"),
+  check("date").not().isEmpty().withMessage("La fecha es obligatoria"),
   //middleware que maneja los errores
   fieldValidator,
 ];

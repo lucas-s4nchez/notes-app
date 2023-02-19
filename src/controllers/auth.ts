@@ -85,3 +85,32 @@ export const revalidateToken = (req: Request, res: Response) => {
     token: token,
   });
 };
+export const deleteUser = async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const uid = req.uid;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe un usuario con ese id",
+      });
+    }
+    if (user._id.toString() !== uid) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No puedes eliminar un usuario que no creaste",
+      });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({ ok: true, msg: `Usuario ${user.username} eliminado con éxito` });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};

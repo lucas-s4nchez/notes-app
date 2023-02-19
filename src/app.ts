@@ -8,7 +8,6 @@ const app: Application = express(); //tipo de dato: Aplication
 
 //data base
 dbConnection();
-
 //settings
 app.set("port", process.env.PORT);
 

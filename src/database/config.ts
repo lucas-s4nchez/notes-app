@@ -1,9 +1,22 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
-const dbConnection = async () => {
+const { DB_CNN, DB_CNN_TEST, NODE_ENV } = process.env;
+
+const stringConection = NODE_ENV === "test" ? DB_CNN_TEST : DB_CNN;
+
+const dbConnection = () => {
   try {
     mongoose.set("strictQuery", false);
-    await mongoose.connect(process.env.DB_CNN || "mongodb://localhost:27017");
+    mongoose
+      .connect(stringConection!)
+      .then(() => {
+        console.log("Database connected");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
     console.log("base de datos conectada");
   } catch (error) {
     console.log(error);

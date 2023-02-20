@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import morgan from "morgan";
+import cors from "cors";
 import dbConnection from "./database/config";
 import authRoutes from "./routes/auth";
 import notesRoutes from "./routes/notes";
@@ -12,6 +13,7 @@ dbConnection();
 app.set("port", process.env.PORT);
 
 //middlewares
+app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 

@@ -101,8 +101,28 @@ describe("Pruebas en el endpoint '/api/notes/' método [POST]", () => {
     expect(ok).toBeTruthy();
   });
 
+  //Obtener una nota por el id
+  test("debe de cargar/leer una nota de un usuario mediante el id correctamente", async () => {
+    const token: string = await loginValidUser();
+    //agrego una nota
+    const addNewNoteResponse = await api
+      .post("/api/notes/")
+      .send(testNote)
+      .set("x-token", token);
+    //obtener una nota mediante el id
+    const noteId = addNewNoteResponse.body.note._id;
+    const getNoteByIdResponse = await api
+      .get(`/api/notes/${noteId}`)
+      .set("x-token", token);
+    const { ok, note } = getNoteByIdResponse.body;
+
+    expect(ok).toBeTruthy();
+    expect(note.content).toBe(testNote.content);
+    expect(note.title).toBe(testNote.title);
+  });
+
   //Validaciones
-  test("debe de fallar al editar o borrar una nota que el usuario no creó", async () => {
+  test("debe de fallar al leer/editar/borrar una nota que el usuario no creó", async () => {
     const testToken: string = await loginValidUser();
     const jhonDoeToken: string = await loginInvalidUser();
     //agrego una nota desde el usuario test@test.com
@@ -122,7 +142,7 @@ describe("Pruebas en el endpoint '/api/notes/' método [POST]", () => {
     expect(ok).toBeFalsy();
     expect(msg).toBe("No puedes editar un nota que no creaste");
   });
-  test("debe de fallar al editar o borrar una nota que no existe", async () => {
+  test("debe de fallar al leer/editar/borrar una nota que no existe", async () => {
     const token: string = await loginValidUser();
 
     const noteId = "63f012d6cffc909ce3db0892";

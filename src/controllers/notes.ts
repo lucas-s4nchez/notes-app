@@ -35,6 +35,34 @@ export const getNotes = async (req: Request, res: Response) => {
     notes,
   });
 };
+export const getNoteById = async (req: Request, res: Response) => {
+  const noteId = req.params.id;
+  const uid = req.uid;
+  try {
+    const note = await Note.findById(noteId);
+    if (!note) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe una nota con ese id",
+      });
+    }
+    if (note.user.toString() !== uid) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No puedes acceder a una nota que no creaste",
+      });
+    }
+    res.json({
+      ok: true,
+      note,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
 export const updateNote = async (req: Request, res: Response) => {
   const noteId = req.params.id;
   const uid = req.uid;
